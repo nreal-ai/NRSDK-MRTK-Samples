@@ -1,0 +1,23 @@
+# CI build producing developer packages.
+
+variables:
+- template: config/settings.yml
+
+jobs:
+- job: CodeValidation
+  pool:
+    vmImage: windows-2019
+  steps:
+  - template: templates/validation.yml
+
+- job: UnityValidation
+  timeoutInMinutes: 90
+  pool:
+    name: Analog-Unity
+  workspace:
+    clean: resources
+  steps:
+  - template: templates/ci-common.yml
+    parameters:
+      publishPackagesToFeed: true
+      UnityVersion: $(Unity2019VersionInternal)

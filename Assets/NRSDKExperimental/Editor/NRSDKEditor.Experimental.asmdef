@@ -1,0 +1,13 @@
+{
+    "name": "NRSDKEditor.Experimental",
+    "references": [
+        "NRSDK",
+        "NRSDK.Experimental"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

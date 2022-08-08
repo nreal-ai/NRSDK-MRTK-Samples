@@ -1,0 +1,20 @@
+# [Template] Common build tasks shared between CI builds and PR validation.
+
+parameters:
+  UnityVersion: ""
+
+steps:
+# Build UWP ARM64.
+- template: tasks/unitybuild.yml
+  parameters:
+    Arch: 'arm64'
+    Platform: 'UWP'
+    PackagingDir: 'ARM64'
+    UnityVersion: ${{ parameters.UnityVersion }}
+    PublishArtifacts: true
+
+- template: tests.yml
+  parameters:
+    UnityVersion: ${{ parameters.UnityVersion }}
+
+- template: end.yml

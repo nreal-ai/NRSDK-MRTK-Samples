@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d147dff73310941b29fc513aaef4af, type: 3}
+  m_Name: SessionConfig_Demo
+  m_EditorClassIdentifier: 
+  PlaneFindingMode: 3
+  ImageTrackingMode: 1
+  TrackingImageDatabase: {fileID: 11400000, guid: 0710d2d03c2e37f41b7ec7f4298d328d,
+    type: 2}
+  EnableNotification: 1
+  GlassesErrorTipPrefab: {fileID: 114446480136121918, guid: f3bd61487bccfc34abfc952ea78923be,
+    type: 3}
+  TrackingModeChangeTipPrefab: {fileID: 114429345346749554, guid: 03ffa16cba025c844b778902a3170680,
+    type: 3}
+  ProjectConfig: {fileID: 11400000, guid: c66f5f1413c2e471aa0c410731aa0a78, type: 2}

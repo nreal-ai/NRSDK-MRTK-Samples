@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/HandTrackingHub.unity
+    guid: 9040720efad343149a09d192f95cfc72
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/Clipping.unity
+    guid: 363d8abd44dde5b47afd2a2a1b90c827
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/ColorPicker.unity
+    guid: ef00d8a00fcb415489fcba5a68f2078d
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/Dock.unity
+    guid: 1cc3773dc8422ca48bc86d9475b81212
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/HandInteraction.unity
+    guid: f05cb37b293536547ac5de18c47b1475
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/HandMenu.unity
+    guid: c794e6201db335147adc783e17ffb1fd
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/HandMenuLayout.unity
+    guid: aeb505434870a8c4d9c31e1006ac3db7
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/HandTrackingHubMainMenu.unity
+    guid: 0c09b008cedc50d40ac3bbad78132667
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/Joystick.unity
+    guid: b126d5355a3577145b2662815bee84bc
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/NonNativeKeyboard.unity
+    guid: cff2fce46e0ccf248bb7e44abe229567
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/ScrollingObjectCollection.unity
+    guid: 2c781594e0a213a4d8e5292a3d025216
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/PressableButton.unity
+    guid: 9492e5a697c8af842b125301a385a6e6
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: df272d4e79a849b43882cbcab0e7d681,
+      type: 2}
+    Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 6b53ef77bf6929a489f9db3d2aa94093,
+      type: 2}
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 00ee5d9f5b028ea4c9328928d4b92a92,
+      type: 2}
+    com.unity.xr.arcore.PlayerSettings: {fileID: 11400000, guid: e62a87a58e0855440bf3675f4e3eac18,
+      type: 2}
+    com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: d96734d10d0040248bbb79519bb034b7,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: c56bfdcf5c850a246a31dfc330710d10,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 253ed06b0d48f2e4793c1afb7ae72f5f,
+      type: 2}

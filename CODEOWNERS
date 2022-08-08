@@ -1,0 +1,71 @@
+# This file contains information about the code owners for various
+# files in the MRTK codebase.
+#
+# For more information on CODEOWNERS, see:
+# https://help.github.com/en/articles/about-code-owners
+#
+# For syntax, see:
+# https://help.github.com/en/articles/about-code-owners#codeowners-syntax
+#
+# The intent of this file is to list, on a per-file/per-area basis:
+# 1) Who is the most familiar with an area of code.
+# OR
+# 2) Who can take a first pass at pull request review, or delegate the review
+# to someone else who may be more appropriate.
+#
+# Note that order in this file is EXTREMELY important - the last matching
+# rule will win. This means that the most general rules should be listed
+# first in this file, followed by more specific rules.
+
+# Build / CI Pipeline YAML
+/pipelines/ @MenelvagorMilsom @macborow
+
+# Build / CI C#
+/Assets/MRTK/Core/Utilities/BuildAndDeploy/ @MenelvagorMilsom @macborow
+
+# Build / CI Powershell Scripts
+/scripts/ci/ @MenelvagorMilsom @macborow
+
+# Packaging files
+*.asmdef @davidkline-ms @keveleigh
+*.nupkg @davidkline-ms @keveleigh
+packagetemplate.json @davidkline-ms @keveleigh
+
+# Core
+/Assets/MRTK/Core/ @davidkline-ms @keveleigh
+/Assets/MRTK/Core/Providers/InputSimulation/ @davidkline-ms @keveleigh @MaxWang-MS
+
+# Services and Providers
+/Assets/MRTK/Providers/ @davidkline-ms @keveleigh
+/Assets/MRTK/Providers/LeapMotion/ @davidkline-ms @keveleigh @CDiaz-MS
+/Assets/MRTK/Providers/Oculus/ @davidkline-ms @keveleigh @RogPodge
+/Assets/MRTK/Providers/UnityInput/ @davidkline-ms @keveleigh @CDiaz-MS
+/Assets/MRTK/Services/ @davidkline-ms @keveleigh
+/Assets/MRTK/Services/InputSystem/ @davidkline-ms @keveleigh @julenka
+/Assets/MRTK/Services/SceneSystem/ @davidkline-ms @keveleigh @Railboy
+
+# SDK
+/Assets/MRTK/SDK/ @davidkline-ms
+/Assets/MRTK/SDK/Features/Input/ @davidkline-ms @keveleigh @julenka @CDiaz-MS
+
+# UX
+/Assets/MRTK/SDK/Features/UX/ @julenka @CDiaz-MS
+
+# Tools
+/Assets/MRTK/Tools/ @davidkline-ms @keveleigh @MenelvagorMilsom
+
+# Extensions
+/Assets/MRTK/Extensions/ @davidkline-ms @keveleigh
+
+# Standard Assets
+/Assets/MRTK/StandardAssets/ @davidkline-ms @cre8ivepark @julenka
+/Assets/MRTK/StandardAssets/Shaders/ @Cameron-Micka
+/Assets/MRTK/SDK/StandardAssets/ @davidkline-ms @cre8ivepark @julenka
+/Assets/MRTK/SDK/StandardAssets/Shaders/ @Cameron-Micka
+/Assets/MRTK/Examples/StandardAssets/ @davidkline-ms @cre8ivepark @julenka
+
+# Examples
+/Assets/MRTK/Examples/ @davidkline-ms @keveleigh @julenka @CDiaz-MS @cre8ivepark
+
+# Tests
+/Assets/MRTK/Tests/ @davidkline-ms @keveleigh @julenka @CDiaz-MS

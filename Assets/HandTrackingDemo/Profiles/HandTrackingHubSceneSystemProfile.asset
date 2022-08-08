@@ -1,0 +1,149 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b81dae1d46879b444aa9847f7961649f, type: 3}
+  m_Name: HandTrackingHubSceneSystemProfile
+  m_EditorClassIdentifier: 
+  isCustomProfile: 1
+  useManagerScene: 1
+  managerScene:
+    Name: HandTrackingHub
+    Path: Assets/HandTrackingDemo/Scenes/HandTrackingHub.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 9040720efad343149a09d192f95cfc72, type: 3}
+  useLightingScene: 0
+  defaultLightingSceneIndex: 0
+  lightingScenes:
+  - Name: DefaultLightingScene
+    Path: Assets/MRTK/Services/SceneSystem/SceneSystemResources/DefaultLightingScene.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 7e54e36c44f826c438c95da79f8de638, type: 3}
+  contentScenes:
+  - Name: Clipping
+    Path: Assets/HandTrackingDemo/Scenes/Clipping.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 363d8abd44dde5b47afd2a2a1b90c827, type: 3}
+  - Name: ColorPicker
+    Path: Assets/HandTrackingDemo/Scenes/ColorPicker.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: ef00d8a00fcb415489fcba5a68f2078d, type: 3}
+  - Name: Dock
+    Path: Assets/HandTrackingDemo/Scenes/Dock.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 1cc3773dc8422ca48bc86d9475b81212, type: 3}
+  - Name: HandInteraction
+    Path: Assets/HandTrackingDemo/Scenes/HandInteraction.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: f05cb37b293536547ac5de18c47b1475, type: 3}
+  - Name: HandMenu
+    Path: Assets/HandTrackingDemo/Scenes/HandMenu.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: c794e6201db335147adc783e17ffb1fd, type: 3}
+  - Name: HandMenuLayout
+    Path: Assets/HandTrackingDemo/Scenes/HandMenuLayout.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: aeb505434870a8c4d9c31e1006ac3db7, type: 3}
+  - Name: HandTrackingHubMainMenu
+    Path: Assets/HandTrackingDemo/Scenes/HandTrackingHubMainMenu.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 0c09b008cedc50d40ac3bbad78132667, type: 3}
+  - Name: Joystick
+    Path: Assets/HandTrackingDemo/Scenes/Joystick.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: b126d5355a3577145b2662815bee84bc, type: 3}
+  - Name: NonNativeKeyboard
+    Path: Assets/HandTrackingDemo/Scenes/NonNativeKeyboard.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: cff2fce46e0ccf248bb7e44abe229567, type: 3}
+  - Name: ScrollingObjectCollection
+    Path: Assets/HandTrackingDemo/Scenes/ScrollingObjectCollection.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 2c781594e0a213a4d8e5292a3d025216, type: 3}
+  - Name: PressableButton
+    Path: Assets/HandTrackingDemo/Scenes/PressableButton.unity
+    Included: 0
+    BuildIndex: -1
+    Tag: Untagged
+    Asset: {fileID: 102900000, guid: 9492e5a697c8af842b125301a385a6e6, type: 3}
+  permittedLightingSceneComponentTypes:
+  - reference: UnityEngine.Transform, UnityEngine.CoreModule
+  - reference: UnityEngine.GameObject, UnityEngine.CoreModule
+  - reference: UnityEngine.Light, UnityEngine.CoreModule
+  - reference: UnityEngine.ReflectionProbe, UnityEngine.CoreModule
+  - reference: UnityEngine.LightProbeGroup, UnityEngine.CoreModule
+  - reference: UnityEngine.LightProbeProxyVolume, UnityEngine.CoreModule
+  contentTags: []
+  cachedLightingSettings:
+  - SceneName: DefaultLightingScene
+    RenderSettings:
+      Fog: 0
+      FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      FogMode: 2
+      FogDensity: 0.01
+      LinearFogStart: 0
+      LinearFogEnd: 300
+      AmbientSkyColor: {r: 0.08962262, g: 0.3930819, b: 1, a: 1}
+      AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
+      AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+      AmbientLight: {r: 0, g: 0, b: 0, a: 0}
+      AmbientIntensity: 1
+      AmbientMode: 1
+      SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+      SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+      DefaultReflectionMode: 0
+      DefaultReflectionResolution: 128
+      ReflectionBounces: 1
+      ReflectionIntensity: 1
+      CustomReflection: {fileID: 0}
+      UseRadianceAmbientProbe: 0
+    LightingSettings:
+      BounceScale: 1
+      IndirectOutputScale: 1
+      AlbedoBoost: 1
+      EnvironmentLightingMode: 0
+      EnableBakedLightmaps: 0
+      EnabledRealtimeLightmaps: 0
+    SunlightSettings:
+      UseSunlight: 1
+      Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+      Intensity: 1
+      XRotation: 50
+      YRotation: 330
+      ZRotation: 0
+  editorManageBuildSettings: 1
+  editorEnforceSceneOrder: 1
+  editorManageLoadedScenes: 1
+  editorEnforceLightingSceneTypes: 1
+  editorLightingCacheOutOfDate: 0

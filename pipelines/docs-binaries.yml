@@ -1,0 +1,63 @@
+variables:
+- template: config/settings.yml
+
+trigger:
+- releases/*
+pr: none
+
+jobs:
+- job: BuildUnity2020
+  pool:
+    name: Analog-Unity
+
+  steps:
+  - checkout: self
+    clean: true
+    fetchDepth: 1
+  
+  - task: NuGetToolInstaller@1
+
+  - task: PowerShell@2
+    displayName: 'Create binaries for docs generation'
+    inputs:
+      targetType: filePath
+      filePath: ./scripts/packaging/createbinariesfordocs.ps1
+      arguments: >
+        -Version $(MRTKVersion)
+        -UnityDirectory ${Env:$(Unity2020VersionInternal)}/Editor
+        -OutputDirectory $(Build.ArtifactStagingDirectory)
+
+  - task: PublishPipelineArtifact@1
+    condition: always()
+    displayName: Publish docs binaries
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+      artifactName: DocsBinariesForUnity2020
+
+- job: BuildUnity2019
+  pool:
+    name: Analog-Unity
+
+  steps:
+  - checkout: self
+    clean: true
+    fetchDepth: 1
+  
+  - task: NuGetToolInstaller@1
+
+  - task: PowerShell@2
+    displayName: 'Create binaries for docs generation'
+    inputs:
+      targetType: filePath
+      filePath: ./scripts/packaging/createbinariesfordocs.ps1
+      arguments: >
+        -Version $(MRTKVersion)
+        -UnityDirectory ${Env:$(Unity2019VersionInternal)}/Editor
+        -OutputDirectory $(Build.ArtifactStagingDirectory)
+
+  - task: PublishPipelineArtifact@1
+    condition: always()
+    displayName: Publish docs binaries
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+      artifactName: DocsBinariesForUnity2019

@@ -1,0 +1,10 @@
+{
+    "name": "NRSDK.Experimental",
+    "references": [
+        "NRSDK"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

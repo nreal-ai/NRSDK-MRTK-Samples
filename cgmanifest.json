@@ -1,0 +1,81 @@
+{
+  "Registrations": [
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/microsoft/VisualProfiler-Unity/",
+          "commitHash": "02a1d74069e7f85d9af793112e7971cf28791f60"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/modesttree/Unity3dAsyncAwaitUtil",
+          "commitHash": "9f776694a35dad430dd5718238798a429118ce31"
+        }
+      }
+    },
+    {
+      "component": {
+        "type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/ValveSoftware/steamvr_unity_plugin",
+          "commitHash": "dd9b6953951f9213199b41ad43bcd843ab168828"
+        }
+      }
+    },
+    {
+      "Component": {
+        "Type": "git",
+        "git": {
+          "repositoryUrl": "https://github.com/provencher/MRTK-Quest",
+          "commitHash": "896d2e1639b571c6d177cac143259cd1094aa867"
+        }
+      }
+    },
+    {
+      "Component": {
+        "Type": "other",
+        "Other": {
+          "Name": "Oculus Controller Art",
+          "Version": "1.1",
+          "DownloadUrl": "https://developer.oculus.com/downloads/package/oculus-controller-art/"
+        }
+      }
+    },
+    {
+      "Component": {
+        "Type": "other",
+        "Other": {
+          "Name": "TextMesh Pro",
+          "Version": "1.0",
+          "DownloadUrl": "https://unity3d.com/legal/licenses/Unity_Companion_License"
+        }
+      }
+    },
+    {
+      "Component": {
+        "Type": "pip",
+        "Pip": {
+          "Name": "pygithub",
+          "Version": "1.55"
+        }
+      },
+      "DevelopmentDependency": true
+    },
+    {
+      "Component": {
+        "Type": "pip",
+        "Pip": {
+          "Name": "gitpython",
+          "Version": "3.1.18"
+        }
+      },
+      "DevelopmentDependency": true
+    }
+  ],
+  "Version": 1
+}
