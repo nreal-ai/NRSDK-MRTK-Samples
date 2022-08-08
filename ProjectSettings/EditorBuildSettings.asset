@@ -41,6 +41,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/HandTrackingDemo/Scenes/PressableButton.unity
     guid: 9492e5a697c8af842b125301a385a6e6
+  - enabled: 1
+    path: Assets/HandTrackingDemo/Scenes/HandTrackingHubMainMenu.unity
+    guid: 0c09b008cedc50d40ac3bbad78132667
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: df272d4e79a849b43882cbcab0e7d681,
       type: 2}
