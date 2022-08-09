@@ -1,11 +1,6 @@
 # NRSDK-MRTK
 A sample project providing compatibility with NRSDK features such as hand tracking, to Microsoft's Mixed reality Toolkit (MRTK).
 
----
-description: NRSDK 1.9.3 & MRTK 2.8.0 Integration with Sample Projects
----
-
-# MRTK Integration
 
 ## Overview
 
