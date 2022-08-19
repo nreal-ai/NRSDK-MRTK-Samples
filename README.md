@@ -6,7 +6,7 @@ A sample project providing compatibility with NRSDK features such as hand tracki
 
 This github repo ([https://github.com/nreal-ai/NRSDK-MRTK](https://github.com/nreal-ai/NRSDK-MRTK)) contains extension that adds compatibility for NRSDK, including hand tracking and controller support, to Microsoft's open source Mixed Reality Toolkit ([MRTK](https://docs.microsoft.com/en-us/windows/mixed-reality/develop/unity/mrtk-getting-started)) for Unity. It also contains two open-source sample apps from Microsoft's Mixed Reality Design Labs - Hand Tracking Hub (originally as MRTK examples hub) and Surfaces, which demonstrates NRSDK's hand tracking algorithmic capabilities with MRTK's input system.
 
-**Required Environments:**
+**Environment:**
 
 * Unity 2020.3.X
 * MRTK 2.8.0
