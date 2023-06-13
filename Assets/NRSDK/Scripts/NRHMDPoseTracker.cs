@@ -22,6 +22,7 @@ namespace NRKernal
     public delegate void HMDPoseTrackerEvent();
     public delegate void HMDPoseTrackerModeChangeEvent(NRHMDPoseTracker.TrackingType origin, NRHMDPoseTracker.TrackingType target);
     public delegate void OnTrackingModeChanged(NRHMDPoseTracker.TrackingModeChangedResult result);
+    public delegate void OnWorldPoseResetEvent();
 
 
     /// <summary>
@@ -50,6 +51,8 @@ namespace NRKernal
         public static event HMDPoseTrackerEvent OnHMDLostTracking;
         /// <summary> Event queue for all listeners interested in OnChangeTrackingMode events. </summary>
         public static event HMDPoseTrackerModeChangeEvent OnChangeTrackingMode;
+        /// <summary> Event queue for all listeners interested in OnWorldPoseReset events. </summary>
+        public static event OnWorldPoseResetEvent OnWorldPoseReset;
 
         public struct TrackingModeChangedResult
         {
@@ -373,11 +376,13 @@ namespace NRKernal
         }
 
         private Matrix4x4 cachedWorldMatrix = Matrix4x4.identity;
+        private float cachedWorldPitch = 0;
         /// <summary> Cache the world matrix. </summary>
         public void CacheWorldMatrix()
         {
             Pose cachePose = GetCachPose();
             CacheWorldMatrix(cachePose);
+            NRFrame.ResetHeadPose();
         }
 
         public void CacheWorldMatrix(Pose pose)
@@ -387,30 +392,71 @@ namespace NRKernal
             Vector3 forward_use_gravity = horizontal_plane.ClosestPointOnPlane(pose.forward).normalized;
             Quaternion rotation_use_gravity = Quaternion.LookRotation(forward_use_gravity, Vector3.up);
             cachedWorldMatrix = ConversionUtility.GetTMatrix(pose.position, rotation_use_gravity);
+            cachedWorldPitch = 0;
             NRDebugger.Info("CacheWorldMatrix Adjust : pos={0}, {1}, cachedWorldMatrix={2}", 
                 pose.position.ToString("F2"), rotation_use_gravity.ToString("F2"), cachedWorldMatrix.ToString());
+
+            OnWorldPoseReset?.Invoke();
         }
 
         /// <summary> 
-        /// Reset world matrix ,position:(0,0,0) ,rotation:(x,0,z) 
+        ///     Reset the camera to position:(0,0,0) and yaw or pitch orientation.
         /// </summary>
-        public void ResetWorldMatrix()
+        /// <param name="resetPitch"> 
+        /// Whether to reset the pitch direction.
+        ///     if resetPitch is false, reset camera to rotation(x,0,z). Where x&z is the pitch&roll of the HMD device.
+        ///     if resetPitch is true,  reset camera to rotation(0,0,z); Where z is the roll of the HMD device.
+        /// </param>
+        public void ResetWorldMatrix(bool resetPitch = false)
         {
             Pose pose;
             if (UseRelative)
-            {
                 pose = new Pose(transform.localPosition, transform.localRotation);
+            else
+                pose = new Pose(transform.position, transform.rotation);
+
+            // Get src pose which is not affected by cachedWorldMatrix
+            Matrix4x4 cachedWorldInverse = Matrix4x4.Inverse(cachedWorldMatrix);
+            var worldMatrix = ConversionUtility.GetTMatrix(pose.position, pose.rotation);
+            var objectMatrix = cachedWorldInverse * worldMatrix;
+            var srcPose = new Pose(ConversionUtility.GetPositionFromTMatrix(objectMatrix), ConversionUtility.GetRotationFromTMatrix(objectMatrix));
+
+            Quaternion rotation = Quaternion.identity;
+            if (resetPitch)
+            {
+                // reset on degree of yaw and pitch, so only roll of HMD is not affect.
+                Vector3 forward = srcPose.forward;
+                Vector3 right = Vector3.Cross(forward, Vector3.up);
+                Vector3 up = Vector3.Cross(right, forward);
+                rotation = Quaternion.LookRotation(forward, up);
+                Debug.LogFormat("ResetWorldMatrix: forward={0}, right={1}, up={2}", forward.ToString("F4"), right.ToString("F4"), up.ToString("F4"));
             }
             else
             {
-                pose = new Pose(transform.position, transform.rotation);
+                // only reset on degree of yaw, so the pitch and roll of HMD is not affect.
+                Plane horizontal_plane = new Plane(Vector3.up, Vector3.zero);
+                Vector3 forward_use_gravity = horizontal_plane.ClosestPointOnPlane(srcPose.forward).normalized;
+                rotation = Quaternion.LookRotation(forward_use_gravity, Vector3.up);
             }
 
-            Plane horizontal_plane = new Plane(Vector3.up, Vector3.zero);
-            Vector3 forward_use_gravity = horizontal_plane.ClosestPointOnPlane(pose.forward).normalized;
-            Quaternion rotation_use_gravity = Quaternion.LookRotation(forward_use_gravity, Vector3.up);
-            var matrix = ConversionUtility.GetTMatrix(pose.position, rotation_use_gravity);
-            cachedWorldMatrix = Matrix4x4.Inverse(matrix) * cachedWorldMatrix;
+            var matrix = ConversionUtility.GetTMatrix(srcPose.position, rotation);
+            cachedWorldMatrix = Matrix4x4.Inverse(matrix);
+            cachedWorldPitch = -rotation.eulerAngles.x;
+            
+            // update pose immediately
+            UpdatePoseByTrackingType();
+            
+            // log out
+            {
+                var correctPos = ConversionUtility.GetPositionFromTMatrix(cachedWorldMatrix);
+                var correctRot = ConversionUtility.GetRotationFromTMatrix(cachedWorldMatrix);
+                NRDebugger.Info("[NRHMDPoseTracker] ResetWorldMatrix : resetPitch={0}, curPos={1},{2} srcPose={3},{4}, cachedWorldPitch={5}, correctPos={6},{7}",
+                    resetPitch, pose.position.ToString("F4"), pose.rotation.eulerAngles.ToString("F4"),
+                    srcPose.position.ToString("F4"), srcPose.rotation.eulerAngles.ToString("F4"),
+                    cachedWorldPitch, correctPos.ToString("F4"), correctRot.eulerAngles.ToString("F4"));
+            }
+
+            OnWorldPoseReset?.Invoke();
         }
 
         /// <summary>
@@ -419,24 +465,29 @@ namespace NRKernal
         /// <returns></returns>
         public Matrix4x4 GetWorldOffsetMatrixFromNative()
         {
-            Matrix4x4 parentTransfromMatrix;
+            Matrix4x4 parentTransformMatrix;
             if (UseRelative)
             {
                 if (transform.parent == null)
                 {
-                    parentTransfromMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+                    parentTransformMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
                 }
                 else
                 {
-                    parentTransfromMatrix = Matrix4x4.TRS(transform.parent.position, transform.parent.rotation, Vector3.one);
+                    parentTransformMatrix = Matrix4x4.TRS(transform.parent.position, transform.parent.rotation, Vector3.one);
                 }
             }
             else
             {
-                parentTransfromMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+                parentTransformMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
             }
 
-            return parentTransfromMatrix * cachedWorldMatrix;
+            return parentTransformMatrix * cachedWorldMatrix;
+        }
+
+        public float GetCachedWorldPitch()
+        {
+            return cachedWorldPitch;
         }
 
         private Pose ApplyWorldMatrix(Pose pose)

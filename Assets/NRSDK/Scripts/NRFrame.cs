@@ -217,6 +217,12 @@ namespace NRKernal
             }
         }
 
+        internal static void ResetHeadPose()
+        {
+            m_CurrentPoseTimeStamp = 0;
+            m_HeadPose = Pose.identity;
+        }
+
         internal static void OnPreUpdate(ref LostTrackingReason lostTrackReason)
         {
             Pose pose = Pose.identity;

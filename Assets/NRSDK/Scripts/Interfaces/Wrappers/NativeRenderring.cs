@@ -27,7 +27,9 @@ namespace NRKernal
                 return m_RenderingHandle;
             }
         }
-        public IntPtr FrameInfoPtr;
+
+        private FrameInfo m_FrameInfo;
+        private UInt64 m_ViewportListHandle;
         private IntPtr m_FrameTexturesPtr;
 
         public struct TexturesArray
@@ -40,16 +42,12 @@ namespace NRKernal
 
         public NativeRenderring()
         {
-            int sizeOfPerson = Marshal.SizeOf(typeof(FrameInfo));
-            FrameInfoPtr = Marshal.AllocHGlobal(sizeOfPerson);
-
             int sizeOfTextures = Marshal.SizeOf(typeof(TexturesArray));
             m_FrameTexturesPtr = Marshal.AllocHGlobal(sizeOfTextures);
         }
 
         ~NativeRenderring()
         {
-            Marshal.FreeHGlobal(FrameInfoPtr);
             Marshal.FreeHGlobal(m_FrameTexturesPtr);
         }
 
@@ -139,7 +137,7 @@ namespace NRKernal
             }
 
 #if !UNITY_EDITOR
-            FrameInfo framinfo = (FrameInfo)Marshal.PtrToStructure(FrameInfoPtr, typeof(FrameInfo));
+            FrameInfo framinfo = m_FrameInfo;
             var result = NativeApi.NRRenderingDoRender(m_RenderingHandle, framinfo.leftTex, framinfo.rightTex, ref framinfo.headPose);
             return result == NativeResult.Success;
 #else
@@ -147,19 +145,22 @@ namespace NRKernal
 #endif
         }
 
-        public void PrepareForFrame()
+        public void DoSubmitFrame(IFrameProcessor frameProcessor)
         {
-            if (m_RenderingHandle == 0)
+            if (m_RenderingHandle == 0 || frameProcessor == null)
                 return;
 
-            FrameInfo framinfo = (FrameInfo)Marshal.PtrToStructure(FrameInfoPtr, typeof(FrameInfo));
+            FrameInfo framinfo = m_FrameInfo;
             var frame_handle = framinfo.frameHandle;
 
-            // NRDebugger.Info("[NativeRenderer] PrepareForFrame: frameHandle={0}", frame_handle);
+            // NRDebugger.Info("[NativeRenderer] DoSubmitFrame: frameCnt={2}, frameHandle={0}, viewportListHandle={1}", frame_handle, m_ViewportListHandle, Time.frameCount);
             NativeApi.NRFrameSetRenderingPose(m_RenderingHandle, frame_handle, ref framinfo.headPose);
             NativeApi.NRFrameSetFocusPlane(m_RenderingHandle, frame_handle, ref framinfo.focusPosition, ref framinfo.normalPosition);
             NativeApi.NRFrameSetPresentTime(m_RenderingHandle, frame_handle, framinfo.presentTime);
             NativeApi.NRFrameSetFlag(m_RenderingHandle, frame_handle, (int)(framinfo.changeFlag));
+
+            frameProcessor.SubmitFrame(frame_handle, m_ViewportListHandle);
+            m_ViewportListHandle = 0;
         }
 
         public UInt64 CreateFrameHandle()
@@ -171,7 +172,7 @@ namespace NRKernal
 
         public void DoExtendedRenderring()
         {
-            FrameInfo framinfo = (FrameInfo)Marshal.PtrToStructure(FrameInfoPtr, typeof(FrameInfo));
+            FrameInfo framinfo = m_FrameInfo;
 
             var frame_handle = framinfo.frameHandle;
             // NRDebugger.Info("[NativeRenderer] DoExtendedRenderring: frameHandle={0}", frame_handle);
@@ -189,11 +190,10 @@ namespace NRKernal
             NativeApi.NRFrameDestroy(m_RenderingHandle, frame_handle);
         }
 
-        public void WriteFrameData(FrameInfo frame, bool directMode)
+        public void WriteFrameData(FrameInfo frame, UInt64 viewportListHandle, bool directMode)
         {
-            Marshal.StructureToPtr(frame, FrameInfoPtr, true);
-            // FrameInfo framinfo = (FrameInfo)Marshal.PtrToStructure(FrameInfoPtr, typeof(FrameInfo));
-            // NRDebugger.Info("[NativeRenderer] WriteFrameData: frameHandle={0} -> {1}", frame.frameHandle, framinfo.frameHandle);
+            m_FrameInfo = frame;
+            m_ViewportListHandle = viewportListHandle;
 
             if (directMode)
             {

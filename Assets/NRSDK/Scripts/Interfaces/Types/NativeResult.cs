@@ -51,7 +51,16 @@ namespace NRKernal
         /// <summary> Glasses display mode is not 3d. </summary>
         GetDisplayModeMismatch = 12,
 
+        /// <summary> Find a cooldown when call the function. </summary>
+        InTheCoolDown = 13,
+
         /// <summary> Not support hand tracking calculation. </summary>
-        UnSupportedHandtrackingCalculation = 14
+        UnSupportedHandtrackingCalculation = 14,
+
+        /// <summary> The operation is busy. </summary>
+        Busy = 15,
+
+        /// <summary> The operation is processing. </summary>
+        Processing = 16,
     }
 }

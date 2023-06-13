@@ -238,7 +238,7 @@ namespace NRKernal
                     continue;
 
                 CaculatePointerPose(handState);
-                CaculatePinchState(handState);
+                // CaculatePinchState(handState);
             }
         }
 
@@ -271,11 +271,11 @@ namespace NRKernal
             }
         }
 
-        private void CaculatePinchState(HandState handState)
-        {
-            handState.pinchStrength = HandStateUtility.GetIndexFingerPinchStrength(handState);
-            handState.isPinching = handState.pinchStrength > float.Epsilon;
-        }
+        // private void CaculatePinchState(HandState handState)
+        // {
+        //     handState.pinchStrength = HandStateUtility.GetIndexFingerPinchStrength(handState);
+        //     handState.isPinching = handState.pinchStrength > float.Epsilon;
+        // }
 
         private bool IsPerformingSystemGesture(HandState handState)
         {

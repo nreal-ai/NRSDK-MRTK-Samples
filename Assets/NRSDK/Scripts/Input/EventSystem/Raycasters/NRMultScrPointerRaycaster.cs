@@ -117,44 +117,13 @@ namespace NRKernal
         /// <param name="distance">               The distance.</param>
         /// <param name="raycaster">              The raycaster.</param>
         /// <param name="raycastResults">         The raycast results.</param>
-        public override void GraphicRaycast(Canvas canvas, bool ignoreReversedGraphics, Ray ray, float distance, NRPointerRaycaster raycaster, List<RaycastResult> raycastResults)
+        public override void GraphicRaycast(ICanvasRaycastTarget raycastTarget, bool ignoreReversedGraphics, Ray ray, float distance, NRPointerRaycaster raycaster, List<RaycastResult> raycastResults)
         {
-            if (canvas == null) { return; }
+            if (raycastTarget.canvas == null) { return; }
 
             var eventCamera = raycaster.eventCamera;
-            var screenCenterPoint = eventCamera.WorldToScreenPoint(eventCamera.transform.position); //new Vector2(m_ScreenWidth * 0.5f, m_ScreenHeight * 0.5f + 1800);
-            var graphics = GraphicRegistry.GetGraphicsForCanvas(canvas);
-
-            for (int i = 0; i < graphics.Count; ++i)
-            {
-                var graphic = graphics[i];
-                // -1 means it hasn't been processed by the canvas, which means it isn't actually drawn
-                if (graphic.depth == -1 || !graphic.raycastTarget) { continue; }
-
-                if (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, screenCenterPoint, eventCamera)) { continue; }
-
-                if (ignoreReversedGraphics && Vector3.Dot(ray.direction, graphic.transform.forward) <= 0f) { continue; }
-
-                if (!graphic.Raycast(screenCenterPoint, eventCamera)) { continue; }
-
-                float dist;
-                new Plane(graphic.transform.forward, graphic.transform.position).Raycast(ray, out dist);
-                if (dist > distance) { continue; }
-                var racastResult = new RaycastResult
-                {
-                    gameObject = graphic.gameObject,
-                    module = raycaster,
-                    distance = dist,
-                    worldPosition = ray.GetPoint(dist),
-                    worldNormal = -graphic.transform.forward,
-                    screenPosition = screenCenterPoint,
-                    index = raycastResults.Count,
-                    depth = graphic.depth,
-                    sortingLayer = canvas.sortingLayerID,
-                    sortingOrder = canvas.sortingOrder
-                };
-                raycastResults.Add(racastResult);
-            }
+            var screenCenterPoint = eventCamera.WorldToScreenPoint(eventCamera.transform.position);
+            raycastTarget.GraphicRaycast(ignoreReversedGraphics, ray, distance, screenCenterPoint, raycaster, raycastResults);
         }
     }
     

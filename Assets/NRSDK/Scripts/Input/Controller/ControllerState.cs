@@ -61,6 +61,8 @@ namespace NRKernal
     /// <summary> Values that represent controller buttons. </summary>
     public enum ControllerButton
     {
+        /// <summary> An enum constant representing the first option. </summary>
+        BEGIN = 1 << 0,
         /// <summary> An enum constant representing the trigger option. </summary>
         TRIGGER = 1 << 0,
         /// <summary> An enum constant representing the Application option. </summary>
@@ -70,7 +72,9 @@ namespace NRKernal
         /// <summary> An enum constant representing the grip option. </summary>
         GRIP = 1 << 3,
         /// <summary> An enum constant representing the touchpad button option. </summary>
-        TOUCHPAD_BUTTON = 1 << 4
+        TOUCHPAD_BUTTON = 1 << 4,
+        /// <summary> An enum constant representing the last option. </summary>
+        END = 1 << 4,
     }
 
     /// <summary> Values that represent controller connection states. </summary>
@@ -286,8 +290,9 @@ namespace NRKernal
         internal void CheckButtonEvents()
         {
             UpdateDeltaTouch();
-            foreach (ControllerButton button in Enum.GetValues(typeof(ControllerButton)))
+            for (int i = (int)ControllerButton.BEGIN; i <= (int)ControllerButton.END; i <<= 1)
             {
+                var button = (ControllerButton)i;
                 if (GetButtonDown(button))
                 {
                     if (m_LastDownTimeDict.ContainsKey(button))

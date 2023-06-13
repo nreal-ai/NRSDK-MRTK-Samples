@@ -24,6 +24,16 @@ namespace NRKernal.NRExamples
             m_MeshRender = transform.GetComponent<MeshRenderer>();
         }
 
+        void Start()
+        {
+            NRInput.AddClickListener(ControllerHandEnum.Right, ControllerButton.APP, () =>
+            {
+                Debug.Log("ResetWorldMatrix");
+                var poseTracker = NRSessionManager.Instance.NRHMDPoseTracker;
+                poseTracker.ResetWorldMatrix();
+            });
+        }
+
         /// <summary> Updates this object. </summary>
         void Update()
         {

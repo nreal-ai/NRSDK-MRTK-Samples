@@ -71,6 +71,7 @@ namespace NRKernal
         private NativeGlassesController m_NativeGlassesController = null;
         private Exception m_InitException = null;
         private static bool m_IsGlassesPlugOut = false;
+        private static bool m_ResetStateOnNextResume = false;
 
         public UInt64 NativeGlassesHandler => m_NativeGlassesController.GlassesControllerHandle;
         public UInt64 NativeHMDHandler => m_NativeHMD.HmdHandle;
@@ -157,6 +158,11 @@ namespace NRKernal
             OnGlassesDisconnect += onGlassesDisconnectEvent;
         }
 
+        public void ResetStateOnNextResume()
+        {
+            m_ResetStateOnNextResume = true;
+        }
+
         public override void Pause()
         {
             if (!running)
@@ -180,6 +186,13 @@ namespace NRKernal
             }
 
             base.Resume();
+
+            if (m_ResetStateOnNextResume)
+            {
+                m_ResetStateOnNextResume = false;
+                m_IsGlassesPlugOut = false;
+            }
+
 #if !UNITY_EDITOR
             m_NativeGlassesController?.Resume();
             m_NativeHMD?.Resume();

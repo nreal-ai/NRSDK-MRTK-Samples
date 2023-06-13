@@ -111,6 +111,11 @@ namespace NRKernal.Experimental
             return m_FrameHandle;
         }
 
+        public UInt64 GetViewPortListHandle()
+        {
+            return m_ViewportListHandle;
+        }
+
         private bool IsMultiThread
         {
             get
@@ -609,15 +614,15 @@ namespace NRKernal.Experimental
             return bufferid;
         }
 
-        public void SubmitFrame()
+        public void SubmitFrame(ulong frameHandle, ulong viewPortListHandle)
         {
             //NRDebugger.Info("[SwapChain] SubmitFrame IsInitialized:{0} _ViewportListHandle:{1} _FrameHandle:{2}", IsInitialized, m_ViewportListHandle, m_FrameHandle);
-            if (!IsInitialized || m_ViewportListHandle == 0 || m_FrameHandle == 0)
+            if (!IsInitialized || viewPortListHandle == 0 || frameHandle == 0)
             {
                 NRDebugger.Warning("[SwapChain] Can not submit frame!");
                 return;
             }
-            NativeSwapchain.Submit(m_FrameHandle, m_ViewportListHandle);
+            NativeSwapchain.Submit(frameHandle, viewPortListHandle);
         }
 
         public void UpdateExternalSurface(int layerid, NativeMat4f transform, Int64 timestamp, int index)

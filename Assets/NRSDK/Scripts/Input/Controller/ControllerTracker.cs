@@ -1,4 +1,5 @@
-﻿/****************************************************************************
+﻿using System.Numerics;
+/****************************************************************************
 * Copyright 2019 Nreal Techonology Limited. All rights reserved.
 *                                                                                                                                                          
 * This file is part of NRSDK.                                                                                                          
@@ -54,6 +55,7 @@ namespace NRKernal
         {
             NRInput.OnControllerRecentering += OnRecentering;
             NRInput.OnControllerStatesUpdated += OnControllerStatesUpdated;
+            NRHMDPoseTracker.OnWorldPoseReset += OnWorldPoseReset;
         }
 
         /// <summary> Executes the 'disable' action. </summary>
@@ -61,6 +63,7 @@ namespace NRKernal
         {
             NRInput.OnControllerRecentering -= OnRecentering;
             NRInput.OnControllerStatesUpdated -= OnControllerStatesUpdated;
+            NRHMDPoseTracker.OnWorldPoseReset -= OnWorldPoseReset;
         }
 
         private void Start()
@@ -107,15 +110,33 @@ namespace NRKernal
                 ConversionUtility.GetRotationFromTMatrix(object_in_world));
         }
 
-        /// <summary> Executes the 'recentering' action. </summary>
+        /// <summary>
+        ///     Recenter the φ coordinate of laser to make sure the laser is pointing to forward of camera. But the θ coordinate of the laser keeps in sync with controller device.
+        /// </summary>
         private void OnRecentering()
         {
             Plane horizontal_plane = new Plane(Vector3.up, Vector3.zero);
             Vector3 horizontalFoward = horizontal_plane.ClosestPointOnPlane(CameraCenter.forward).normalized;
-            Quaternion horizontalRot = Quaternion.LookRotation(horizontalFoward, Vector3.up);
+            var horizontalRotEuler = Quaternion.LookRotation(horizontalFoward, Vector3.up).eulerAngles;
 
+            // var worldMatrix = NRSessionManager.Instance.NRHMDPoseTracker.GetWorldOffsetMatrixFromNative();
+            // var worldRot = ConversionUtility.GetRotationFromTMatrix(worldMatrix);
+            // Quaternion correctRot = worldRot * Quaternion.Euler(0, horizontalRotEuler.y, 0);
+
+            var verticalDegree = NRSessionManager.Instance.NRHMDPoseTracker.GetCachedWorldPitch();
+            // Use the yaw of camera and the pitch of the world offset from native.
+            Quaternion correctRot = Quaternion.Euler(verticalDegree, 0, 0) * Quaternion.Euler(0, horizontalRotEuler.y, 0);
+            // For 6dof controller, the position should be cached as pose of controller device is reset.
             Vector3 position = m_Is6dof ? transform.position : Vector3.zero;
-            m_CachedWorldMatrix = ConversionUtility.GetTMatrix(position, horizontalRot);
+            m_CachedWorldMatrix = ConversionUtility.GetTMatrix(position, correctRot);
+
+            NRDebugger.Info("[ControllerTracker] OnRecentering : forward={0}, horRot={1}, vertRot={2}, correctRot={3}", 
+                CameraCenter.forward.ToString("F4"), horizontalRotEuler.ToString("F4"), verticalDegree.ToString("F4"), correctRot.eulerAngles.ToString("F4"));
+        }
+
+        private void OnWorldPoseReset()
+        {
+            NRInput.RecenterController();
         }
     }
 }

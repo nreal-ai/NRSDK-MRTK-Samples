@@ -85,33 +85,6 @@ namespace NRKernal
             return curl;
         }
 
-        /// <summary>
-        /// Pinch calculation of the index finger with the thumb based on the distance between the finger tip and the thumb tip.
-        /// 4 cm (0.04 unity units) is the treshold for fingers being far apart and pinch being read as 0.
-        /// </summary>
-        /// <param name="handedness">Handedness to query joint pose against.</param>
-        /// <returns> Float ranging from 0 to 1. 0 if the thumb and finger are not pinched together, 1 if thumb finger are pinched together</returns>
-        private const float IndexThumbSqrMagnitudeThreshold = 0.0016f;
-        public static float GetIndexFingerPinchStrength(HandState handState)
-        {
-            if (!handState.isTracked)
-            {
-                return 0f;
-            }
-
-            if (handState.currentGesture == HandGesture.Grab)
-            {
-                return 1f;
-            }
-
-            var indexPosition = handState.GetJointPose(HandJointID.IndexTip).position;
-            var thumbPosition = handState.GetJointPose(HandJointID.ThumbTip).position;
-            var distanceVector = indexPosition - thumbPosition;
-            float indexThumbSqrMagnitude = distanceVector.sqrMagnitude;
-            float pinchStrength = Mathf.Clamp(1 - indexThumbSqrMagnitude / IndexThumbSqrMagnitudeThreshold, 0.0f, 1.0f);
-            return pinchStrength;
-        }
-
         /*
          * System gesture should satisfy these conditions below:
          * 1,Palm face to camera 

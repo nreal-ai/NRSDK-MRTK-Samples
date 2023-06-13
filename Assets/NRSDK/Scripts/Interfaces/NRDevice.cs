@@ -143,7 +143,16 @@ namespace NRKernal
                 }
                 finally
                 {
-                    ForceKill(true);
+                    bool forceKill = true;
+                    // Some app contains 2D content and 3D content. It may wish to keep process alive after glasses switch mode.
+                    if (reason == GlassesDisconnectReason.NOTIFY_TO_QUIT_APP && !NRSessionManager.Instance.NRSessionBehaviour.SessionConfig.ForceKillWhileGlassSwitchMode)
+                        forceKill = false;
+
+                    NRDebugger.Info("[NRDevice] OnGlassesDisconnectEvent: forceKill={0}, ForceKillWhileGlassSwitchMode={1}", forceKill, NRSessionManager.Instance.NRSessionBehaviour.SessionConfig.ForceKillWhileGlassSwitchMode);
+                    if (forceKill)
+                        ForceKill(true);
+                    else
+                        Subsystem.ResetStateOnNextResume();
                 }
             }, () =>
             {
@@ -168,6 +177,7 @@ namespace NRKernal
         /// <exception cref="Exception"> Thrown when an exception error condition occurs.</exception>
         public static void ForceKill(bool needrelease = true)
         {
+            NRDebugger.Info("[NRDevice] ForceKill: release={0}", needrelease);
             try
             {
                 ReleaseSDK();

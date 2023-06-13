@@ -49,6 +49,7 @@ namespace NRKernal
 
         public enum DisplayMode
         {
+            None,
             Unity,
             AndroidNative
         }
@@ -261,7 +262,21 @@ namespace NRKernal
                 return;
             }
 
-            if (provider != null && m_VirtualController == null && Application.platform == RuntimePlatform.Android)
+            bool targetOSX = false;
+#if UNITY_EDITOR
+            targetOSX = EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.StandaloneOSX;
+#endif
+            if (Application.platform == RuntimePlatform.OSXPlayer || targetOSX)
+            {
+                // No virtual controller on Mac
+                m_DisplayMode = DisplayMode.None;
+                m_ISystemButtonStateProvider = null;
+                if (m_VirtualController != null)
+                {
+                    m_VirtualController.gameObject.SetActive(false);
+                }
+            }
+            else if (provider != null && m_VirtualController == null && Application.platform == RuntimePlatform.Android)
             {
                 m_DisplayMode = DisplayMode.AndroidNative;
                 m_ISystemButtonStateProvider = provider;

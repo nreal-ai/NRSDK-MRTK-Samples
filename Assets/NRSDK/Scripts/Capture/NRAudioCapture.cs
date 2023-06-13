@@ -162,7 +162,7 @@ namespace NRKernal.Record
             
             bool recordMic = setupParams.CaptureAudioMic;
             bool recordApp = setupParams.CaptureAudioApplication;            
-            if (recordMic && recordApp)
+            if (recordApp)
             {
                 NRAndroidPermissionsManager.GetInstance().RequestAndroidPermission("android.permission.RECORD_AUDIO").ThenAction((requestResult) =>
                 {
@@ -211,24 +211,9 @@ namespace NRKernal.Record
                     }
                 });
             }
-            else if (recordApp)
+            else
             {
-                NRAndroidPermissionsManager.GetInstance().RequestScreenCapture().ThenAction((AndroidJavaObject mediaProjection) => 
-                {
-                    if (mediaProjection != null)
-                    {
-                        setupParams.mediaProjection = mediaProjection;
-                        StartAudioMode(setupParams, onAudioModeStartedCallback);
-                    }
-                    else
-                    {
-                        NRDebugger.Error("[AudioCapture] Screen capture is denied by user.");
-                        var result = new AudioCaptureResult();
-                        result.resultType = CaptureResultType.UnknownError;
-                        onAudioModeStartedCallback?.Invoke(result);
-                        NRSessionManager.Instance.OprateInitException(new NRPermissionDenyError(NativeConstants.ScreenCaptureDenyErrorTip));
-                    }
-                });
+                StartAudioMode(setupParams, onAudioModeStartedCallback);
             }
         }
 

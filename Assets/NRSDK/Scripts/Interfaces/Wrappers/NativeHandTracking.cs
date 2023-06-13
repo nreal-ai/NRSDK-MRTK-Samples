@@ -91,17 +91,22 @@ namespace NRKernal
             NR_GESTURE_TYPE_UNKNOWN = -1,
             NR_GESTURE_TYPE_OPEN_HAND = 0,
             NR_GESTURE_TYPE_GRAB = 1,
-            //NR_GESTURE_TYPE_PINCH = 2,
+            NR_GESTURE_TYPE_PINCH = 2,
             NR_GESTURE_TYPE_POINT = 3,
-            NR_GESTURE_TYPE_VICTORY = 4
+            NR_GESTURE_TYPE_VICTORY = 4,
+            NR_GESTURE_TYPE_CALL = 5,
+            NR_GESTURE_TYPE_SYSTEM = 6,
         }
 
         public enum NRGestureTypeMask : UInt64
         {
             NR_GESTURE_TYPE_MASK_OPEN_HAND = (1L << NRGestureType.NR_GESTURE_TYPE_OPEN_HAND),
             NR_GESTURE_TYPE_MASK_GRAB = (1L << NRGestureType.NR_GESTURE_TYPE_GRAB),
-            //NR_GESTURE_TYPE_MASK_PINCH = (1L << NRGestureType.NR_GESTURE_TYPE_PINCH),
+            NR_GESTURE_TYPE_MASK_PINCH = (1L << NRGestureType.NR_GESTURE_TYPE_PINCH),
             NR_GESTURE_TYPE_MASK_POINT = (1L << NRGestureType.NR_GESTURE_TYPE_POINT),
+            NR_GESTURE_TYPE_MASK_VICTORY = (1L << NRGestureType.NR_GESTURE_TYPE_VICTORY),
+            NR_GESTURE_TYPE_MASK_CALL = (1L << NRGestureType.NR_GESTURE_TYPE_CALL),
+            NR_GESTURE_TYPE_MASK_SYSTEM = (1L << NRGestureType.NR_GESTURE_TYPE_SYSTEM),
             NR_GESTURE_TYPE_MASK_ALL = 0x7FFFFFFFFFFFFFFF
         }
 
@@ -193,9 +198,13 @@ namespace NRKernal
         {
             if (m_HandTrackingHandle == 0)
                 return;
-            if (!TryUpdateHandTracking())
-                return;
-            if (!TryCreateTrackingDataHandle())
+
+            ulong timeStamp = NRFrame.CurrentPoseTimeStamp;
+            if (timeStamp == 0)
+            {
+                NRSessionManager.Instance.NativeAPI.NativeRenderring.GetFramePresentTime(ref timeStamp);
+            }
+            if (!TryAcquireHandTrackingDataHandle(timeStamp))
                 return;
 
             UInt64 hmd_time_nanos = 0;
@@ -264,6 +273,7 @@ namespace NRKernal
 
                 UInt32 handJointCount = 0;
                 NativeApi.NRHandStateGetHandJointCount(hand_state_handle, ref handJointCount);
+                //NativeApi.NRHandStateGetConfidence(hand_state_handle, ref handState.confidence);
 
                 handState.isTracked = true;
                 handState.pointerPoseValid = true;
@@ -339,6 +349,12 @@ namespace NRKernal
             return result == NativeResult.Success;
         }
 
+        private bool TryAcquireHandTrackingDataHandle(UInt64 timestamp)
+        {
+            var result = NativeApi.NRAcquireHandTrackingData(m_HandTrackingHandle, timestamp, ref m_TrackingDataHandle);
+            return result == NativeResult.Success;
+        }
+
         private HandEnum GetMappedHandEnum(NRHandType handType)
         {
             switch (handType)
@@ -361,10 +377,16 @@ namespace NRKernal
                     return HandGesture.OpenHand;
                 case NRGestureType.NR_GESTURE_TYPE_GRAB:
                     return HandGesture.Grab;
+                case NRGestureType.NR_GESTURE_TYPE_PINCH:
+                    return HandGesture.Pinch;
                 case NRGestureType.NR_GESTURE_TYPE_POINT:
                     return HandGesture.Point;
                 case NRGestureType.NR_GESTURE_TYPE_VICTORY:
                     return HandGesture.Victory;
+                case NRGestureType.NR_GESTURE_TYPE_CALL:
+                    return HandGesture.Call;
+                case NRGestureType.NR_GESTURE_TYPE_SYSTEM:
+                    return HandGesture.System;
                 default:
                     break;
             }
@@ -430,6 +452,9 @@ namespace NRKernal
             public static extern NativeResult NRHandTrackingDataCreate(UInt64 hand_tracking_handle, ref UInt64 out_hand_tracking_data_handle);
 
             [DllImport(NativeConstants.NRNativeLibrary)]
+            public static extern NativeResult NRAcquireHandTrackingData(UInt64 hand_tracking_handle, UInt64 timestamp, ref UInt64 out_hand_tracking_data_handle);
+
+            [DllImport(NativeConstants.NRNativeLibrary)]
             public static extern NativeResult NRHandTrackingDataDestroy(UInt64 hand_tracking_data_handle);
 
             [DllImport(NativeConstants.NRNativeLibrary)]
@@ -467,6 +492,9 @@ namespace NRKernal
 
             [DllImport(NativeConstants.NRNativeLibrary)]
             public static extern NativeResult NRHandJointGetHandJointPose(UInt64 hand_joint_state_handle, ref NativeMat4f out_hand_joint_pose);
+
+            //[DllImport(NativeConstants.NRNativeLibrary)]
+            //public static extern NativeResult NRHandStateGetConfidence(UInt64 hand_state_handle, ref float out_confidence);
         }
     }
 }

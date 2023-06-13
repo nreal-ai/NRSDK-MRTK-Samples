@@ -365,7 +365,7 @@ namespace NRKernal
             if (error is NRNativeError)
             {
                 NativeResult result = (error as NRNativeError).result;
-                tip = string.Format("Error Code-{0}, {1}", (int)result, tip);
+                tip = string.Format("{0}({1})", tip, (int)result);
             }
             return tip;
         }

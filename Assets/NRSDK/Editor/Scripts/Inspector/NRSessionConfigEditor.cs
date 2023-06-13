@@ -18,6 +18,7 @@ namespace NRKernal
 		SerializedProperty ImageTrackingMode;
 		SerializedProperty TrackingImageDatabase;
 		SerializedProperty EnableNotification;
+		SerializedProperty ForceKillWhileGlassSwitchMode;
 		SerializedProperty GlassesErrorTipPrefab;
 		SerializedProperty TrackingModeChangeTipPrefab;
 		SerializedProperty ProjectConfig;
@@ -32,6 +33,7 @@ namespace NRKernal
 			ImageTrackingMode 			= serializedObject.FindProperty("ImageTrackingMode");
 			TrackingImageDatabase 		= serializedObject.FindProperty("TrackingImageDatabase");
 			EnableNotification 			= serializedObject.FindProperty("EnableNotification");
+			ForceKillWhileGlassSwitchMode 			= serializedObject.FindProperty("ForceKillWhileGlassSwitchMode");
 			GlassesErrorTipPrefab 		= serializedObject.FindProperty("GlassesErrorTipPrefab");
 			TrackingModeChangeTipPrefab = serializedObject.FindProperty("TrackingModeChangeTipPrefab");
 			ProjectConfig				= serializedObject.FindProperty("ProjectConfig");
@@ -50,6 +52,7 @@ namespace NRKernal
 			EditorGUILayout.PropertyField(ImageTrackingMode);
 			EditorGUILayout.PropertyField(TrackingImageDatabase);
 			EditorGUILayout.PropertyField(EnableNotification);
+			EditorGUILayout.PropertyField(ForceKillWhileGlassSwitchMode);
 
 			EditorGUILayout.Space();
 			EditorGUILayout.PropertyField(GlassesErrorTipPrefab);

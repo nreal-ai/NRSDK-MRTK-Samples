@@ -43,7 +43,8 @@ namespace NRKernal.NRExamples
         List<string> _AudioStateOptions = new List<string>() {
             NRVideoCapture.AudioState.MicAudio.ToString(),
             NRVideoCapture.AudioState.ApplicationAudio.ToString(),
-            NRVideoCapture.AudioState.ApplicationAndMicAudio.ToString()
+            NRVideoCapture.AudioState.ApplicationAndMicAudio.ToString(),
+            NRVideoCapture.AudioState.None.ToString()
         };
 
         void Start()

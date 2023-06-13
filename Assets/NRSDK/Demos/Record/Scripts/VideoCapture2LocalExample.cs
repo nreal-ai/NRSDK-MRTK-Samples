@@ -10,12 +10,18 @@
 using NRKernal.Record;
 using System;
 using System.IO;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace NRKernal.NRExamples
 {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    using GalleryDataProvider = NativeGalleryDataProvider;
+#else
+    using GalleryDataProvider = MockGalleryDataProvider;
+#endif
     /// <summary> A video capture 2 local example. </summary>
     [HelpURL("https://developer.nreal.ai/develop/unity/video-capture")]
     public class VideoCapture2LocalExample : MonoBehaviour
@@ -51,6 +57,8 @@ namespace NRKernal.NRExamples
                 return Path.Combine(Application.persistentDataPath, filename);
             }
         }
+
+        GalleryDataProvider galleryDataTool;
 
         void Awake()
         {
@@ -264,6 +272,12 @@ namespace NRKernal.NRExamples
             NRDebugger.Info("Stopped Video Capture Mode!");
             RefreshUIState();
 
+            var encoder = m_VideoCapture.GetContext().GetEncoder() as VideoEncoder;
+            string path = encoder.EncodeConfig.outPutPath;
+            string filename = string.Format("Nreal_Shot_Video_{0}.mp4", NRTools.GetTimeStamp().ToString());
+            
+            StartCoroutine(DelayInsertVideoToGallery(path, filename, "Record"));
+
             // Release video capture resource.
             m_VideoCapture.Dispose();
             m_VideoCapture = null;
@@ -274,6 +288,23 @@ namespace NRKernal.NRExamples
             // Release video capture resource.
             m_VideoCapture?.Dispose();
             m_VideoCapture = null;
+        }
+
+        IEnumerator DelayInsertVideoToGallery(string originFilePath, string displayName, string folderName)
+        {
+            yield return new WaitForSeconds(0.1f);
+            InsertVideoToGallery(originFilePath, displayName, folderName);
+        }
+
+        public void InsertVideoToGallery(string originFilePath, string displayName, string folderName)
+        {
+            NRDebugger.Info("InsertVideoToGallery: {0}, {1} => {2}", displayName, originFilePath, folderName);
+            if (galleryDataTool == null)
+            {
+                galleryDataTool = new GalleryDataProvider();
+            }
+
+            galleryDataTool.InsertVideo(originFilePath, displayName, folderName);
         }
     }
 }
